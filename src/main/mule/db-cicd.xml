@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7da91c15-6b6f-413e-9805-520725efe22d" >
+		<http:listener-connection host="${http.host}" port="${http.port}" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="32892bbe-ec39-4514-9fdc-cf36c1fe4e30" >
+		<db:mssql-connection host="DESKTOP-OTSUDG4" instanceName="MSSQLSERVER" port="1433" user="yoni" password="Mayo7882*#*" databaseName="yoniCICD" />
+	</db:config>
+	
+	<global-property doc:name="Global Property" doc:id="07a6564a-0053-4075-8999-0baee84282c8" name="env" value="local" />
+	<configuration-properties doc:name="Configuration properties" doc:id="3f472f9e-4274-4773-b8a5-a16b2c7e90c7" file="local.properties" />
+	
+	
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="637be6e7-db94-44f7-b563-b83369d7ffd9" file="local-secured.properties" key="Mayo7882*#*Redu2009*#*" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<flow name="db-cicdFlow" doc:id="2814dc79-b788-46b2-8a3c-a5f6d859f050" >
+		<http:listener doc:name="Listener" doc:id="6015b232-d249-4f83-ad92-894711a4a97c" config-ref="HTTP_Listener_config" path="${http.path}"/>
+		<db:select doc:name="Select" doc:id="c2ea0b84-3e35-44e1-aee3-988e7e7a9d3b" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from [dbo].[CICD]]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="JSON payload" doc:id="cca1fa56-1f26-4b11-899f-b717421952cf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
