@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		<http:listener-connection host="${http.host}" port="${http.port}" />
 	</http:listener-config>
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="32892bbe-ec39-4514-9fdc-cf36c1fe4e30" >
-		<db:mssql-connection host="DESKTOP-OTSUDG4" instanceName="MSSQLSERVER" port="1433" user="yoni" password="Mayo7882*#*" databaseName="yoniCICD" />
+		<db:mssql-connection host="${db.host}" instanceName="${db.instanceName}" port="${db.port}" user="${db.user}" password="${secure::db.password}" databaseName="${db.databaseName}" />
 	</db:config>
 	
 	<global-property doc:name="Global Property" doc:id="07a6564a-0053-4075-8999-0baee84282c8" name="env" value="local" />
